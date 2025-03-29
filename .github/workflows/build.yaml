@@ -13,22 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      # Set up Docker Buildx (for multi-platform builds if needed)
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      # Set Commit SHA
+      - name: Set Commit SHA
+        run: echo "COMMIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      # Debugging: List files in the docker folder
-      - name: Debugging the code
-        run: |
-          echo "Current directory structure:"
-          ls -R ./docker
-
-      # Log in to Docker Hub
-      - name: Log in to Docker Hub
+      # Docker Hub Login
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -42,19 +36,36 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: eu-north-1
 
-      # Log in to AWS ECR
       - name: Login to AWS ECR
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Set AWS ECR Registry in environment variables
+      # Set AWS ECR Registry
       - name: Set AWS ECR Registry
         run: echo "AWS_ECR_REGISTRY=${{ steps.ecr-login.outputs.registry }}" >> $GITHUB_ENV
+
+      # Authenticate Docker Client with AWS
+      - name: Authenticate Docker Client with AWS 
+        run: aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin $AWS_ECR_REGISTRY
+
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # Build Services using Docker Compose
+      - name: Build Services
+        run: |
+          echo "Building all services with Docker Compose..."
+          docker-compose -f ./docker/docker-compose.yaml build
+
+      # List Docker Images (for Debugging)
+      - name: List Docker Images
+        run: docker images
 
       # Ensure AWS ECR repositories exist
       - name: Create ECR Repositories if Missing
         run: |
-          for service in streaming-frontend streaming-worker; do
+          for service in deploify-deploy-code deploify-frontend deploify-webhook-event-handler deploify-request-handler; do
             echo "Checking if AWS ECR repository for ${service} exists..."
             if ! aws ecr describe-repositories --repository-names ${service} > /dev/null 2>&1; then
               echo "Creating AWS ECR repository: ${service}"
@@ -62,8 +73,24 @@ jobs:
             fi
           done
 
-      # Build and push Docker images using Docker Compose
-      - name: Build and push Docker images with Docker Compose
+      # Tag & Push to Docker Hub
+      - name: Push to Docker Hub
         run: |
-          docker-compose -f ./docker/docker-compose.yaml build
-          docker-compose -f ./docker/docker-compose.yaml push
+          for service in deploify-deploy-code deploify-frontend deploify-webhook-event-handler deploify-request-handler; do
+            echo "Tagging and pushing ${service} to Docker Hub..."
+            docker tag ${service}:latest dhruvwebdev146/${service}:${COMMIT_SHA}
+            docker tag ${service}:latest dhruvwebdev146/${service}:latest
+            docker push dhruvwebdev146/${service}:${COMMIT_SHA}
+            docker push dhruvwebdev146/${service}:latest 
+          done
+
+      # Tag & Push to AWS ECR
+      - name: Push to AWS ECR
+        run: |        
+          for service in deploify-deploy-code deploify-frontend deploify-webhook-event-handler deploify-request-handler; do
+            echo "Tagging and pushing ${service} to AWS ECR..."
+            docker tag ${service}:latest $AWS_ECR_REGISTRY/${service}:${COMMIT_SHA}
+            docker tag ${service}:latest $AWS_ECR_REGISTRY/${service}:latest
+            docker push $AWS_ECR_REGISTRY/${service}:${COMMIT_SHA}
+            docker push $AWS_ECR_REGISTRY/${service}:latest
+          done
