@@ -23,6 +23,9 @@ jobs:
       
       - name: cd docker
         run: cd ./docker 
+      
+      - name: debugging the code
+        run: ls
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -58,18 +61,18 @@ jobs:
             fi
           done
 
-      # Build and push Docker images to Docker Hub and ECR
+# Build and push Docker images to Docker Hub and ECR
       - name: Build and push Docker images to Docker Hub and ECR
         uses: docker/build-push-action@v3
         with:
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/streaming-frontend:latest
-            $AWS_ECR_REGISTRY/streaming-frontend:latest
-            ${{ secrets.DOCKER_USERNAME }}/streaming-worker:latest
-            $AWS_ECR_REGISTRY/streaming-worker:latest
-          context: .
-          file: ./docker/docker-compose.yaml
-          build-args: |
-            NODE_VERSION=18
-            NODE_ENV=production 
+         push: true
+         tags: |
+         ${{ secrets.DOCKER_USERNAME }}/streaming-frontend:latest
+         ${{ env.AWS_ECR_REGISTRY }}/streaming-frontend:latest
+         ${{ secrets.DOCKER_USERNAME }}/streaming-worker:latest
+         ${{ env.AWS_ECR_REGISTRY }}/streaming-worker:latest
+        context: .
+        file: ./docker-compose.yaml
+        build-args: |
+         NODE_VERSION=18
+         NODE_ENV=production
