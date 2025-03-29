@@ -74,4 +74,3 @@ jobs:
           build-args: |
             NODE_VERSION=18
             NODE_ENV=production
-        working-directory: ./docker
