@@ -17,13 +17,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Docker Buildx
+      # Set up Docker Buildx (for multi-platform builds if needed)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Debugging step to list files in ./docker directory
+      # Debugging: List files in the docker folder
       - name: Debugging the code
-        run: ls ./docker
+        run: |
+          echo "Current directory structure:"
+          ls -R ./docker
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -40,6 +42,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: eu-north-1
 
+      # Log in to AWS ECR
       - name: Login to AWS ECR
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
@@ -59,18 +62,8 @@ jobs:
             fi
           done
 
-      # Build and push Docker images to Docker Hub and ECR
-      - name: Build and push Docker images to Docker Hub and ECR
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/streaming-frontend:latest
-            ${{ env.AWS_ECR_REGISTRY }}/streaming-frontend:latest
-            ${{ secrets.DOCKER_USERNAME }}/streaming-worker:latest
-            ${{ env.AWS_ECR_REGISTRY }}/streaming-worker:latest
-          context: ./docker
-          file: ./docker/docker-compose.yaml
-          build-args: |
-            NODE_VERSION=18
-            NODE_ENV=production
+      # Build and push Docker images using Docker Compose
+      - name: Build and push Docker images with Docker Compose
+        run: |
+          docker-compose -f ./docker/docker-compose.yaml build
+          docker-compose -f ./docker/docker-compose.yaml push
