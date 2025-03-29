@@ -20,6 +20,9 @@ jobs:
       # Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+      
+      - name: cd docker
+        run: cd ./docker 
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
