@@ -65,7 +65,7 @@ jobs:
       # Ensure AWS ECR repositories exist
       - name: Create ECR Repositories if Missing
         run: |
-          for service in deploify-deploy-code deploify-frontend deploify-webhook-event-handler deploify-request-handler; do
+          for service in streaming-frontend streaming-worker; do
             echo "Checking if AWS ECR repository for ${service} exists..."
             if ! aws ecr describe-repositories --repository-names ${service} > /dev/null 2>&1; then
               echo "Creating AWS ECR repository: ${service}"
@@ -76,7 +76,7 @@ jobs:
       # Tag & Push to Docker Hub
       - name: Push to Docker Hub
         run: |
-          for service in deploify-deploy-code deploify-frontend deploify-webhook-event-handler deploify-request-handler; do
+          for service in streaming-frontend streaming-worker; do
             echo "Tagging and pushing ${service} to Docker Hub..."
             docker tag ${service}:latest dhruvwebdev146/${service}:${COMMIT_SHA}
             docker tag ${service}:latest dhruvwebdev146/${service}:latest
@@ -87,7 +87,7 @@ jobs:
       # Tag & Push to AWS ECR
       - name: Push to AWS ECR
         run: |        
-          for service in deploify-deploy-code deploify-frontend deploify-webhook-event-handler deploify-request-handler; do
+          for service in streaming-frontend streaming-worker; do
             echo "Tagging and pushing ${service} to AWS ECR..."
             docker tag ${service}:latest $AWS_ECR_REGISTRY/${service}:${COMMIT_SHA}
             docker tag ${service}:latest $AWS_ECR_REGISTRY/${service}:latest
