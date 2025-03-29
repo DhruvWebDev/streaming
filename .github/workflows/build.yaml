@@ -62,7 +62,7 @@ jobs:
       - name: Build Services
         run: |
           echo "Building all services with Docker Compose..."
-          docker-compose -f ./docker/docker-compose.yaml build
+          docker-compose -f ./docker-compose.yaml build
 
       # List Docker Images (for Debugging)
       - name: List Docker Images
