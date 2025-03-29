@@ -1,21 +1,11 @@
-FROM node:18-alpine AS Builder 
+FROM node:18-alpine 
 
 WORKDIR /app
-
-RUN cd apps/worker
 
 COPY . .
 
 RUN npm ci
 
-RUN npm lint
-
 RUN npm run build
 
-FROM oven/bun:latest AS Runner
-
-WORKDIR /app
-
-COPY --from=Builder .
-
-RUN bun dist/index.js
+RUN node dist/index.js
