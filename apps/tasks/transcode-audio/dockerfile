@@ -1,0 +1,18 @@
+FROM ubuntu:focal
+
+WORKDIR /app  
+
+# Install dependencies and AWS CLI  
+RUN apt-get update && \
+    apt-get install -y curl unzip ffmpeg && \
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install
+
+COPY . .
+
+# Make the script executable  
+RUN chmod +x main.sh  
+
+# Set the default command  
+CMD ["sh", "main.sh"]

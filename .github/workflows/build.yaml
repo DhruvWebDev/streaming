@@ -1,0 +1,72 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Log in to AWS ECR
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: eu-north-1
+
+      - name: Login to AWS ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # Set AWS ECR Registry in environment variables
+      - name: Set AWS ECR Registry
+        run: echo "AWS_ECR_REGISTRY=${{ steps.ecr-login.outputs.registry }}" >> $GITHUB_ENV
+
+      # Ensure AWS ECR repositories exist
+      - name: Create ECR Repositories if Missing
+        run: |
+          for service in streaming-frontend streaming-worker; do
+            echo "Checking if AWS ECR repository for ${service} exists..."
+            if ! aws ecr describe-repositories --repository-names ${service} > /dev/null 2>&1; then
+              echo "Creating AWS ECR repository: ${service}"
+              aws ecr create-repository --repository-name ${service} --image-scanning-configuration scanOnPush=true --region eu-north-1
+            fi
+          done
+
+      # Build and push Docker images to Docker Hub and ECR
+      - name: Build and push Docker images to Docker Hub and ECR
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/streaming-frontend:latest
+            $AWS_ECR_REGISTRY/streaming-frontend:latest
+            ${{ secrets.DOCKER_USERNAME }}/streaming-worker:latest
+            $AWS_ECR_REGISTRY/streaming-worker:latest
+          context: .
+          file: ./docker/docker-compose.yaml
+          build-args: |
+            NODE_VERSION=18
+            NODE_ENV=production

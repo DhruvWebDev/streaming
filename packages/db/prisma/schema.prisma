@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @unique @default(cuid())
+  email          String           @unique
+  hashedPassword String
+  profile_pic    String?
+  created_at     DateTime?        @default(now())
+  videos         Video[]
+  subscription   Subscription?
+  ProcessedVideo ProcessedVideo[]
+}
+
+model Subscription {
+  id          String           @id @unique @default(cuid())
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String           @unique
+  type        SubscriptionType @default(Free)
+  created_at  DateTime?        @default(now())
+  txSignature String
+}
+
+model Video {
+  id         String      @id @unique @default(cuid())
+  status     VideoStatus @default(UPLOADED)
+  path       String
+  created_at DateTime?   @default(now())
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+
+  processedVideos ProcessedVideo[]
+}
+
+model ProcessedVideo {
+  id         String    @id @unique @default(cuid())
+  cdn        String
+  created_at DateTime? @default(now())
+  video      Video     @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  videoId    String
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum SubscriptionType {
+  Free
+  Hobby
+  Enterprise
+}
+
+enum VideoStatus {
+  UPLOADED
+  PROCESSING
+  SUCCESSFUL
+  FAIL
+}
