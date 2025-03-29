@@ -8,7 +8,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "start:web": "cd ./apps/web && npm run start",
-    "start:worker": "cd ./apps/worker && npm run start"
+    "build:worker": "cd ./apps/worker && npm run start",
+    "start:worker":"cd ./apps/worker && node dist/index.js"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
