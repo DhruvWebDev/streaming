@@ -4,8 +4,8 @@ services:
   # Frontend Service
   frontend:
     build:
-      context: ./apps/web  # Path to your frontend code
-      dockerfile: Dockerfile
+      context: .  # Path to your frontend code
+      dockerfile: Dockerfile.frontend
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/deploify_db
     networks:
@@ -16,8 +16,8 @@ services:
   # Worker Service
   worker:
     build:
-      context: ./apps/worker  # Path to your worker code
-      dockerfile: Dockerfile
+      context: .  # Path to your worker code
+      dockerfile: Dockerfile.frontend
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/deploify_db
     networks:
