@@ -72,4 +72,4 @@ jobs:
           file: ./docker/docker-compose.yaml
           build-args: |
             NODE_VERSION=18
-            NODE_ENV=production
+            NODE_ENV=production 
