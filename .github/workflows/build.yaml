@@ -93,7 +93,7 @@ jobs:
       # Tag & Push to AWS ECR
       - name: Push to AWS ECR
         run: |        
-          for service in streaming-frontend streaming-worker; do
+          for service in streaming_frontend streaming_worker; do
             echo "Tagging and pushing ${service} to AWS ECR..."
             docker tag ${service}:latest $AWS_ECR_REGISTRY/${service}:${COMMIT_SHA}
             docker tag ${service}:latest $AWS_ECR_REGISTRY/${service}:latest
