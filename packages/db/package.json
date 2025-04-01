@@ -3,8 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
-  "exports":"./src/index.ts",
+  "exports": "./src/index.ts",
   "devDependencies": {
+    "@repo/eslint-config": "^0.0.0",
     "@types/bun": "latest"
   },
   "peerDependencies": {
