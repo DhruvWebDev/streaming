@@ -9,8 +9,8 @@
     "check-types": "turbo run check-types",
     "start:web": "cd ./apps/web && npm run start",
     "build:worker": "cd ./apps/worker && npm run start",
-    "start:worker":"cd ./apps/worker && node dist/index.js",
-    "test:api":"cd ./tests && bun test"
+    "start:worker": "cd ./apps/worker && node dist/index.js",
+    "test:api": "cd ./tests && bun test"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
@@ -29,6 +29,7 @@
     "@aws-sdk/client-ecs": "^3.778.0",
     "@aws-sdk/client-sqs": "^3.777.0",
     "@solana/web3.js": "^1.98.0",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "husky": "^9.1.7"
   }
 }
