@@ -12,7 +12,7 @@
     "start:worker": "cd ./apps/worker && node dist/index.js",
     "test:api": "cd ./tests && bun test",
     "db:generate": "cd ./packages/db && npx prisma generate && cd ../../",
-    "build:web":"cd ./apps/web && next build && cd ../../"
+    "build:web":"turbo run build --filter=web"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
