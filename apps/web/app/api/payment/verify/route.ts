@@ -3,7 +3,9 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
 import prisma from "@repo/db";
 
 // Solana connection
-const connection = new Connection(clusterApiUrl("mainnet-beta"), { commitment: "confirmed" });
+const connection = new Connection(clusterApiUrl("mainnet-beta"), {
+  commitment: "confirmed",
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,10 +14,9 @@ export async function POST(req: NextRequest) {
 
     // Check if userId is provided
     if (!userId) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401 }
-      );
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+      });
     }
 
     // Fetch the transaction signature from the database
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
     if (!signature) {
       return new Response(
         JSON.stringify({ error: "Signature not found in the db" }),
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -42,14 +43,13 @@ export async function POST(req: NextRequest) {
         success: true,
         status: txStatus,
       }),
-      { status: 200 }
+      { status: 200 },
     );
-
   } catch (error) {
     console.error("Error verifying transaction:", error);
     return new Response(
       JSON.stringify({ error: "Failed to verify transaction" }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

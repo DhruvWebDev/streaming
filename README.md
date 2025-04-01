@@ -2,7 +2,6 @@
 
 ![OpenMux Banner](https://yourimageurl.com/banner.png)
 
-
 ## 🚀 Introduction
 
 **OpenMux** is an open-source alternative to Mux, providing a scalable and developer-friendly API for video encoding, streaming, and playback. Whether you're building a video-sharing platform, a live-streaming service, or an educational content platform, OpenMux gives you the tools you need without the vendor lock-in.
@@ -40,23 +39,27 @@
 ### Steps
 
 1. **Clone the Repository**:
+
    ```sh
    git clone https://github.com/yourusername/openmux.git
    cd openmux
    ```
 
 2. **Install Dependencies**:
+
    ```sh
    npm install
    ```
 
 3. **Set Up Environment Variables**:
+
    ```sh
    cp .env.example .env
    # Update the .env file with your configurations
    ```
 
 4. **Run Migrations (for PostgreSQL users)**:
+
    ```sh
    npm run migrate
    ```
@@ -71,6 +74,7 @@
 Check out our full API docs at [https://docs.openmux.io](https://docs.openmux.io).
 
 ### Example: Upload a Video
+
 ```sh
 curl -X POST "https://api.openmux.io/videos" \
      -H "Authorization: Bearer YOUR_API_KEY" \
@@ -78,12 +82,14 @@ curl -X POST "https://api.openmux.io/videos" \
 ```
 
 ### Example: Retrieve Video Details
+
 ```sh
 curl -X GET "https://api.openmux.io/videos/{video_id}" \
      -H "Authorization: Bearer YOUR_API_KEY"
 ```
 
 ### Web3 Example: Verify NFT Ownership for Video Access
+
 ```sh
 const ethers = require("ethers");
 const contractAddress = "0xYourContractAddress";

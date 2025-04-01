@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { ArrowRight, Upload, Video } from "lucide-react"
+import Link from "next/link";
+import { ArrowRight, Upload, Video } from "lucide-react";
 
-import { Button } from "@repo/ui/components/ui/button"
+import { Button } from "@repo/ui/components/ui/button";
 
 export default function Home() {
   return (
@@ -13,7 +13,10 @@ export default function Home() {
             <span>VideoCollab</span>
           </div>
           <nav className="flex items-center gap-4">
-            <Link href="/sign-in" className="text-sm font-medium hover:underline">
+            <Link
+              href="/sign-in"
+              className="text-sm font-medium hover:underline"
+            >
               Sign In
             </Link>
             <Link href="/sign-up">
@@ -32,7 +35,8 @@ export default function Home() {
                     Streamline Your YouTube Content Creation
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Upload raw footage, assign editors, and manage your video production workflow in one place.
+                    Upload raw footage, assign editors, and manage your video
+                    production workflow in one place.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -50,9 +54,12 @@ export default function Home() {
                     <div className="grid gap-6 text-center">
                       <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
                       <div className="space-y-2">
-                        <h3 className="text-xl font-bold">Seamless Video Collaboration</h3>
+                        <h3 className="text-xl font-bold">
+                          Seamless Video Collaboration
+                        </h3>
                         <p className="text-sm text-muted-foreground">
-                          Upload raw footage, assign editors, and receive edited videos all in one platform
+                          Upload raw footage, assign editors, and receive edited
+                          videos all in one platform
                         </p>
                       </div>
                     </div>
@@ -66,9 +73,12 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">How It Works</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
+                  How It Works
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Our platform simplifies the collaboration between YouTubers and video editors
+                  Our platform simplifies the collaboration between YouTubers
+                  and video editors
                 </p>
               </div>
             </div>
@@ -127,7 +137,8 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold">Receive</h3>
                 <p className="text-center text-muted-foreground">
-                  Editors upload the finished videos for your review and publication
+                  Editors upload the finished videos for your review and
+                  publication
                 </p>
               </div>
             </div>
@@ -136,7 +147,9 @@ export default function Home() {
       </main>
       <footer className="w-full border-t py-6">
         <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
-          <p className="text-sm text-muted-foreground">© 2025 VideoCollab. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">
+            © 2025 VideoCollab. All rights reserved.
+          </p>
           <nav className="flex gap-4 text-sm text-muted-foreground">
             <Link href="#" className="hover:underline">
               Terms
@@ -151,5 +164,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

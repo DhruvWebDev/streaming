@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     if (!parsedPlan.success) {
       return new Response(
         JSON.stringify({ error: "Invalid subscription plan" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     if (!txHash || !userId) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -34,22 +34,22 @@ export async function POST(req: NextRequest) {
     const connection = new Connection(clusterApiUrl(SOLANA_NETWORK));
 
     // Attempt to get the transaction info
-    const txInfo = await connection.getParsedTransaction(txHash, { commitment: "confirmed" });
+    const txInfo = await connection.getParsedTransaction(txHash, {
+      commitment: "confirmed",
+    });
 
     // Return an error if the transaction is not found
     if (!txInfo) {
-      return new Response(
-        JSON.stringify({ error: "Transaction not found" }),
-        { status: 404 }
-      );
+      return new Response(JSON.stringify({ error: "Transaction not found" }), {
+        status: 404,
+      });
     }
 
     // Check if the transaction failed (i.e., there was an error in the meta data)
     if (txInfo.meta?.err) {
-      return new Response(
-        JSON.stringify({ error: "Transaction failed" }),
-        { status: 400 }
-      );
+      return new Response(JSON.stringify({ error: "Transaction failed" }), {
+        status: 400,
+      });
     }
 
     // Update subscription in the database
@@ -61,15 +61,14 @@ export async function POST(req: NextRequest) {
     // Return a success response
     return new Response(
       JSON.stringify({ message: "Subscription updated successfully" }),
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error processing request:", error);
 
     // Return a generic internal server error if something goes wrong
-    return new Response(
-      JSON.stringify({ error: "Internal server error" }),
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+    });
   }
 }

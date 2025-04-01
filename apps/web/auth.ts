@@ -25,7 +25,7 @@ export const handler = NextAuth({
           const res = await prisma.user.create({
             data: {
               email: user.email as string,
-              profile_pic: profile?.image || '', // Pull the profile picture from GitHub
+              profile_pic: profile?.image || "", // Pull the profile picture from GitHub
               hashedPassword, // This will only work if you're using a password-based auth system
             },
           });

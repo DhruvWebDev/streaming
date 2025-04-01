@@ -1,3 +1,3 @@
 import { handler } from "auth";
 
-export const { GET, POST } = handler
+export const { GET, POST } = handler;
