@@ -8,12 +8,14 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "start:web": "cd ./apps/web && npm run start",
-    "build:worker": "cd ./apps/worker && npm run start",
+    "build:worker": "cd ./apps/worker && npm run start && cd ../../",
     "start:worker": "cd ./apps/worker && node dist/index.js",
-    "test:api": "cd ./tests && bun test"
+    "test:api": "cd ./tests && bun test",
+    "db:generate": "cd ./packages/db && npx prisma generate && cd ../../"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
+    "secretlint": "^9.3.0",
     "turbo": "^2.4.4",
     "typescript": "5.8.2"
   },
@@ -28,8 +30,12 @@
   "dependencies": {
     "@aws-sdk/client-ecs": "^3.778.0",
     "@aws-sdk/client-sqs": "^3.777.0",
+    "@solana/pay": "^0.2.5",
+    "@solana/wallet-adapter-react": "^0.15.36",
+    "@solana/wallet-adapter-react-ui": "^0.9.36",
     "@solana/web3.js": "^1.98.0",
     "dotenv": "^16.4.7",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "next-themes": "^0.4.6"
   }
 }

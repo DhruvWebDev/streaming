@@ -25,6 +25,22 @@ services:
     depends_on:
       - postgres
 
+  # ECS Services
+  ecs-images-hls:
+    build:
+      context: ./apps/tasks/hls-streams # Path to your HLS streaming task
+      dockerfile: dockerfile
+
+  ecs-image-transcode-video:
+    build:
+      context: ./apps/tasks/transcode-audio
+      dockerfile: dockerfile
+
+  ecs-images-transcode-audio:
+    build:
+      context: ./apps/tasks/transcode-video
+      dockerfile: dockerfile
+
   # PostgreSQL Database
   postgres:
     image: postgres:13  # Use PostgreSQL image (can adjust version)
