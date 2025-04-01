@@ -121,7 +121,7 @@ async function pollMessages() {
       QueueUrl: queueUrl,
       MaxNumberOfMessages: 10,
       WaitTimeSeconds: 20,
-      VisibilityTimeout: 30,
+      VisibilityTimeout: 500,
     };
 
     const command = new ReceiveMessageCommand(params);
